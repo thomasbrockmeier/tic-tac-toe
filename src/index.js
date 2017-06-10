@@ -10,12 +10,24 @@ function Square(props) {
   );
 }
 
+function ResetButton(props) {
+  return(
+    <button className='reset' onClick={ props.onClick}>
+      { 'RESET' }
+    </button>
+  );
+}
+
 class Board extends React.Component {
   constructor() {
     super();
     this.state = {
-      squares: Array.apply(null, {length: 9}).map(Number.call, Number),
+      squares: this.emptyArray(), 
     };
+  }
+
+  emptyArray() {
+    return Array.apply(null, {length: 9}).map(Number.call, Number)
   }
 
   handleClick(i) {
@@ -35,6 +47,12 @@ class Board extends React.Component {
     });
   }
 
+  handleReset() {
+    this.setState({
+      squares: this.emptyArray(),
+    });
+  }
+
   renderSquare(i) {
     return (
       <Square
@@ -42,6 +60,14 @@ class Board extends React.Component {
         value={ this.state.squares[i] }
       />
     );
+  }
+
+  renderReset(winner) {
+    if (winner) {
+      return (
+        <ResetButton onClick={ () => this.handleReset() } />
+      );
+    }
   }
 
   render() {
@@ -74,6 +100,9 @@ class Board extends React.Component {
           { this.renderSquare(6) }
           { this.renderSquare(7) }
           { this.renderSquare(8) }
+        </div>
+        <div className='reset-wrapper'>
+          { this.renderReset(winner) }
         </div>
       </div>
     );
