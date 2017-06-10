@@ -5,7 +5,7 @@ import './index.css';
 function Square(props) {
   return (
     <button className="square" onClick={ props.onClick }>
-      { props.value }
+      { (typeof props.value === 'string') ? props.value : '' }
     </button>
   );
 }
@@ -14,27 +14,25 @@ class Board extends React.Component {
   constructor() {
     super();
     this.state = {
-      xIsNext: true,
-      squares: Array(9).fill(null),
+      squares: Array.apply(null, {length: 9}).map(Number.call, Number),
     };
   }
 
   handleClick(i) {
+    let bestMove;
     const squares = this.state.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
+
+    if (calculateWinner(squares) || typeof squares[i] === 'string') {
       return;
     }
 
-    squares[i] = this.nextPlayerSymbol();
+    squares[i] = 'X'; 
+    bestMove = minimax(squares, 'O');
+    squares[bestMove.index] = 'O';
 
     this.setState({
-      xIsNext: !this.state.xIsNext,
       squares: squares,
     });
-  }
-
-  nextPlayerSymbol() {
-    return this.state.xIsNext ? 'X' : 'O';
   }
 
   renderSquare(i) {
@@ -47,13 +45,14 @@ class Board extends React.Component {
   }
 
   render() {
+    const availableSquares = getEmptySquares(this.state.squares);
     const winner = calculateWinner(this.state.squares);
     let status;
 
     if (winner) {
       status = 'Winner: ' + winner;
-    } else {
-      status = 'Next player: ' + this.nextPlayerSymbol();
+    } else if (availableSquares.length === 0) {
+      status = 'Draw';
     }
 
     return (
@@ -120,3 +119,54 @@ function calculateWinner(squares) {
   }
   return null;
 }
+
+function getEmptySquares(squares) {
+  return squares.filter(s => s !== 'X' && s !== 'O');
+}
+
+function minimax(newSquares, playerSymbol) {
+  function calculateBestMove(moves, playerSymbol) {
+    let bestMove;
+    let bestScore = (playerSymbol === 'X') ? 10000 : -10000;
+
+    for (let i = 0; i < moves.length; i++) {
+      if (playerSymbol === 'X' && moves[i].score < bestScore) {
+        bestMove = i;
+        bestScore = moves[i].score;
+      } else if (playerSymbol === 'O' && moves[i].score > bestScore) {
+        bestMove = i;
+        bestScore = moves[i].score;
+      }
+    }
+    return moves[bestMove];
+  }
+
+  const availableSquares = getEmptySquares(newSquares);
+  const moves = [];
+
+  if (calculateWinner(newSquares) === 'X') {        // Player wins
+    return { score: -10 };
+  } else if (calculateWinner(newSquares) === 'O') { // Computer wins
+    return { score: 10 };
+  } else if (availableSquares.length === 0) {       // Draw
+    return { score: 0 };
+  }
+
+  for (let i = 0; i < availableSquares.length; i++) {
+    let move = {};
+    let result;
+
+    move.index = newSquares[availableSquares[i]];   // Set square to playerSymbol
+
+    newSquares[availableSquares[i]] = playerSymbol;
+
+    result = (playerSymbol === 'O') ? minimax(newSquares, 'X') : minimax(newSquares, 'O');
+
+    move.score = result.score;
+    moves.push(move);
+
+    newSquares[availableSquares[i]] = move.index;    // Reset square
+  }
+  return calculateBestMove(moves, playerSymbol);
+}
+
