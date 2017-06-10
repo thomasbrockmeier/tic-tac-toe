@@ -4,7 +4,7 @@ import './index.css';
 
 function Square(props) {
   return (
-    <button className="square" onClick={ props.onClick }>
+    <button className='square' onClick={ props.onClick }>
       { (typeof props.value === 'string') ? props.value : '' }
     </button>
   );
@@ -38,8 +38,8 @@ class Board extends React.Component {
   renderSquare(i) {
     return (
       <Square
-        value={ this.state.squares[i] }
         onClick={ () => this.handleClick(i) }
+        value={ this.state.squares[i] }
       />
     );
   }
@@ -53,6 +53,8 @@ class Board extends React.Component {
       status = 'Winner: ' + winner;
     } else if (availableSquares.length === 0) {
       status = 'Draw';
+    } else {
+      status = ' ';
     }
 
     return (
@@ -156,16 +158,16 @@ function minimax(newSquares, playerSymbol) {
     let move = {};
     let result;
 
-    move.index = newSquares[availableSquares[i]];   // Set square to playerSymbol
+    move.index = newSquares[availableSquares[i]];
 
-    newSquares[availableSquares[i]] = playerSymbol;
+    newSquares[availableSquares[i]] = playerSymbol;     // Set square to playerSymbol
 
     result = (playerSymbol === 'O') ? minimax(newSquares, 'X') : minimax(newSquares, 'O');
 
     move.score = result.score;
     moves.push(move);
 
-    newSquares[availableSquares[i]] = move.index;    // Reset square
+    newSquares[availableSquares[i]] = move.index;       // Reset square
   }
   return calculateBestMove(moves, playerSymbol);
 }
