@@ -38,6 +38,15 @@ class Board extends React.Component {
   }
 
   renderSquare(i) {
+    return (
+      <Square
+        value={ this.state.squares[i] }
+        onClick={ () => this.handleClick(i) }
+      />
+    );
+  }
+
+  render() {
     const winner = calculateWinner(this.state.squares);
     let status;
 
@@ -48,19 +57,8 @@ class Board extends React.Component {
     }
 
     return (
-      <Square
-        value={ this.state.squares[i]}
-        onClick={() => this.handleClick(i)}
-      />
-    );
-  }
-
-  render() {
-    const status = 'Next player: ' + this.nextPlayerSymbol();
-
-    return (
       <div>
-        <div className="status">{status}</div>
+        <div className="status">{ status }</div>
         <div className="board-row">
           {this.renderSquare(0)}
           {this.renderSquare(1)}
