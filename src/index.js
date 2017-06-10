@@ -73,6 +73,8 @@ class Board extends React.Component {
   render() {
     const availableSquares = getEmptySquares(this.state.squares);
     const winner = calculateWinner(this.state.squares);
+    const gameOver = availableSquares.length == 0 || winner;
+
     let status;
 
     if (winner) {
@@ -102,7 +104,7 @@ class Board extends React.Component {
           { this.renderSquare(8) }
         </div>
         <div className='reset-wrapper'>
-          { this.renderReset(winner) }
+          { this.renderReset(gameOver) }
         </div>
       </div>
     );
