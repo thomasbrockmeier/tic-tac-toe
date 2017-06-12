@@ -8,7 +8,7 @@ Find me at:
 ## Build
 
 `npm install`
-`npm run`
+`npm start`
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
