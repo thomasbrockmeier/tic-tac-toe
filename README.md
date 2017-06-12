@@ -1,3 +1,15 @@
+## Minimax-based tic-tac-toe
+Tic-tac-toe bot that cannot lose, written in ReactJS
+
+Find me at:
+
+`https://desolate-escarpment-52962.herokuapp.com/`
+
+## Build
+
+`npm install`
+`npm run`
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
