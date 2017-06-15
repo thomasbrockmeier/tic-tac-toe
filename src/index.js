@@ -198,7 +198,7 @@ function minimax(newSquares, playerSymbol) {
     move.score = result.score;
     moves.push(move);
 
-    // newSquares[availableSquares[i]] = move.index;       // Reset square
+    newSquares[availableSquares[i]] = move.index;       // Reset square
   }
   return calculateBestMove(moves, playerSymbol);
 }
